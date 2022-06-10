@@ -6,21 +6,9 @@ import { Ec2ControlState } from "./Ec2ControlState";
 
 export const Ec2Control: React.FC = () => {
   useAuthGuard();
-
-  const [loading, setLoading] = useState(false);
-
-  const [state, setState] = useState(
-    new Ec2ControlState({
-      isLoading: false,
-      buttonText: "Start Instance",
-      buttonColor: "success",
-      buttonDisabled: false,
-      statusText: "pending",
-    })
-  );
-
+  const [state, setState] = useState(new Ec2ControlState({}));
   function handleButtonClick() {
-    setLoading(true);
+    setState(state.loading());
   }
   return (
     <Box
@@ -42,7 +30,7 @@ export const Ec2Control: React.FC = () => {
             height: 100,
           }}
         >
-          {loading && (
+          {state.isLoading && (
             <Fade in>
               <Box
                 sx={{
@@ -55,18 +43,24 @@ export const Ec2Control: React.FC = () => {
               </Box>
             </Fade>
           )}
-          {!loading && (
+          {!state.isLoading && (
             <Fade in>
               <Box>
                 <Typography variant="subtitle1" color={grey[400]}>
                   Status:
                 </Typography>
                 <Box sx={{ height: 4 }}></Box>
-                <Typography variant="h5">Stopped</Typography>
-                <Box sx={{ height: 4 }}></Box>
-                <Typography variant="caption" color={grey[800]}>
-                  Public Ip: 13.245.53.45
-                </Typography>
+                <Typography variant="h5">{state.statusText}</Typography>
+                {state.publicIP
+                  .map((e) => (
+                    <>
+                      <Box sx={{ height: 4 }}></Box>
+                      <Typography variant="caption" color={grey[800]}>
+                        {e}
+                      </Typography>
+                    </>
+                  ))
+                  .unwrapOr(<></>)}
               </Box>
             </Fade>
           )}
@@ -75,10 +69,11 @@ export const Ec2Control: React.FC = () => {
         <Button
           onClick={handleButtonClick}
           fullWidth
+          disabled={state.buttonDisabled}
           variant="outlined"
-          color="success"
+          color={state.buttonColor as any}
         >
-          Start Instance
+          {state.buttonText}
         </Button>
       </Box>
     </Box>
