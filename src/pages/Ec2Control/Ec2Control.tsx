@@ -1,11 +1,9 @@
 import { CircularProgress, Fade, Box, Button, Typography } from "@mui/material";
 import { grey } from "@mui/material/colors";
 import { useState } from "react";
-import { useAuthGuard } from "../../lib/Auth";
 import { Ec2ControlState } from "./Ec2ControlState";
 
 export const Ec2Control: React.FC = () => {
-  useAuthGuard();
   const [state, setState] = useState(new Ec2ControlState({}));
   function handleButtonClick() {
     setState(state.loading());

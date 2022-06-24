@@ -41,6 +41,13 @@ export class RsResult<T extends {}, E extends {}> {
     throw new Error("Unwrap called on a null/undefined value");
   }
 
+  unwrapErr(): E {
+    if (this.isErr()) {
+      return this.error!;
+    }
+    throw new Error("Unwrap Error called on a Ok value");
+  }
+
   unwrapOr(alt: T): T {
     if (this.isOk()) {
       return this.value!;

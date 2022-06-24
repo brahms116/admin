@@ -75,6 +75,6 @@ export function None<T extends {}>() {
   return new RsOption<T>();
 }
 
-export function Opt<T extends {}>(n: any) {
+export function Opt<T extends {}>(n: T | null | undefined) {
   return new RsOption<T>(n);
 }
