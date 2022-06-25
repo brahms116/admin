@@ -1,11 +1,16 @@
 import { Fetch } from "../FetchUtils";
-import { Err, Ok, RsResult, Some } from "../../shared";
+import { Err, Ok, Opt, RsResult, Some } from "../../shared";
 import { z } from "zod";
 import { AdminErr, AdminErrKind } from "../AdminErr";
 
 export interface Auth {
   authenticate(pwd: string): Promise<RsResult<string, AdminErr>>;
   validateToken(token: string): Promise<RsResult<boolean, AdminErr>>;
+}
+
+export interface PersistToken {
+  saveToken(tk: string): Promise<RsResult<string, AdminErr>>;
+  token(): Promise<RsResult<string, AdminErr>>;
 }
 
 export class AuthService implements Auth {
@@ -45,5 +50,17 @@ export class AuthService implements Auth {
 
     const res = await new Fetch().fetch(body, resSchema);
     return res.map((e) => e.token);
+  }
+}
+
+export class LocalStorageToken implements PersistToken {
+  async saveToken(tk: string): Promise<RsResult<string, AdminErr>> {
+    window.localStorage.setItem("adminToken", tk);
+    return Ok(tk);
+  }
+
+  async token(): Promise<RsResult<string, AdminErr>> {
+    const token = Opt(window.localStorage.getItem("adminToken"));
+    return token.okOr(new AdminErr().configNone("JWT-TOKEN"));
   }
 }

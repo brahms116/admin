@@ -7,6 +7,14 @@ export class AdminErr {
   public kind: AdminErrKind;
   public msg: RsOption<string>;
 
+  toString() {
+    let msg = `A ${this.kind} occured!`;
+    this.msg.map((e) => {
+      msg = msg + ` Msg:${e}`;
+    });
+    return msg;
+  }
+
   constructor() {
     this.kind = AdminErrKind.Unknown;
     this.msg = None();
@@ -25,6 +33,18 @@ export class AdminErr {
 
   req() {
     this.kind = AdminErrKind.ReqErr;
+    return this;
+  }
+
+  serviceNone(serviceName: string) {
+    this.kind = AdminErrKind.ServiceNone;
+    this.msg = Some(`${serviceName} has not been configured`);
+    return this;
+  }
+
+  configNone(configName: string) {
+    this.kind = AdminErrKind.ConfigNone;
+    this.msg = Some(`The configuration ${configName}, is missing`);
     return this;
   }
 

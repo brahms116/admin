@@ -3,5 +3,7 @@ export enum AdminErrKind {
   AuthErr = "AuthErr",
   ReqErr = "ReqErr",
   ServerErr = "ServerErr",
+  ServiceNone = "ServiceNone",
+  ConfigNone = "ConfigNone",
   Unknown = "Unknown",
 }
