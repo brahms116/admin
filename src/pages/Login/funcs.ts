@@ -1,14 +1,53 @@
-import { AdminErrKind, Auth, PersistToken } from "../../lib";
-import { LogError } from "../../lib/Logger";
-
-export interface RouteLoginPage {
-  onAuthenticated(): void;
-}
+import {
+  AdminErrKind,
+  Auth,
+  PersistToken,
+  TextFieldControl,
+  LogError,
+} from "../../lib";
 
 export interface ChangeAuthStatus {
   pending(): void;
   none(): void;
   authenticated(token: string): void;
+}
+
+export interface RouteLoginPage {
+  onAuthenticated(): void;
+}
+
+export async function signIn(
+  authSvr: Auth,
+  authState: ChangeAuthStatus,
+  tokenSvr: PersistToken,
+  router: RouteLoginPage,
+  logger: LogError,
+  pwd: TextFieldControl
+) {
+  if (pwd.getFieldErr().length) {
+    return;
+  }
+  authState.pending();
+  authState.none();
+  const pwdStr = pwd.getField();
+  const res = await authSvr.authenticate(pwdStr);
+
+  if (res.isErr()) {
+    const err = res.unwrapErr();
+    if (err.kind !== AdminErrKind.AuthErr) {
+      logger.logDevMsg(err.toString());
+      logger.logUserMsg("Oops something is wrong");
+    } else {
+      pwd.setFieldErr("Oops not the right password");
+    }
+    authState.none();
+    return;
+  }
+
+  const token = res.unwrap();
+  await tokenSvr.saveToken(token);
+  authState.authenticated(token);
+  router.onAuthenticated();
 }
 
 export async function checkToken(
@@ -18,8 +57,9 @@ export async function checkToken(
   router: RouteLoginPage,
   logger: LogError
 ) {
-  const token = await tokenSvr.token();
+  authState.pending();
 
+  const token = await tokenSvr.token();
   if (token.isErr()) {
     const err = token.unwrapErr();
     if (err.kind !== AdminErrKind.ConfigNone) {
@@ -30,7 +70,6 @@ export async function checkToken(
     return;
   }
 
-  authState.pending();
   const tokenStr = token.unwrap();
   const res = await authSvr.validateToken(tokenStr);
   if (res.isErr()) {
@@ -52,4 +91,9 @@ export async function checkToken(
 
   authState.authenticated(tokenStr);
   router.onAuthenticated();
+}
+
+export function updatePwdField(text: string, pwd: TextFieldControl) {
+  pwd.setField(text);
+  pwd.setFieldErr("");
 }

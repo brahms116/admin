@@ -19,7 +19,7 @@ export class Fetch {
         "Content-Type": "application/json",
         Authorization: token.unwrapOr(""),
       },
-      body,
+      body: JSON.stringify(body),
     });
 
     const json = await res.json();
