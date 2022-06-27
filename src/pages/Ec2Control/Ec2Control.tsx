@@ -1,6 +1,7 @@
 import { CircularProgress, Fade, Box, Button, Typography } from "@mui/material";
 import { grey } from "@mui/material/colors";
 import { useEffect } from "react";
+import { Ec2Status } from "../../lib";
 import { useEc2Ctrl } from "./useEc2Ctrl";
 
 export const Ec2Control: React.FC = () => {
@@ -15,7 +16,14 @@ export const Ec2Control: React.FC = () => {
   }, [controller.isToken]);
 
   const state = controller.ec2State;
-  function handleButtonClick() {}
+  const status = state.ec2Status;
+  function handleButtonClick() {
+    if (status === Ec2Status.On) {
+      controller.ec2Off();
+    } else if (status === Ec2Status.Off) {
+      controller.ec2On();
+    }
+  }
   return (
     <Box
       sx={{

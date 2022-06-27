@@ -9,7 +9,7 @@ import {
 } from "../../lib";
 import { None, sleep } from "../../shared";
 
-const maxCount = 10;
+const maxCount = 25;
 
 export interface Ec2ManageAuthStatus {
   pending(): void;
@@ -78,7 +78,7 @@ export async function turnEc2Off(
   ec2State: Ec2ManageEc2State,
   logger: LogError
 ) {
-  await handleEc2Action(ec2Service, ec2State, logger, "on");
+  await handleEc2Action(ec2Service, ec2State, logger, "off");
 }
 
 export async function turnEc2On(
@@ -86,7 +86,7 @@ export async function turnEc2On(
   ec2State: Ec2ManageEc2State,
   logger: LogError
 ) {
-  await handleEc2Action(ec2Service, ec2State, logger, "off");
+  await handleEc2Action(ec2Service, ec2State, logger, "on");
 }
 
 export async function pollEc2Status(

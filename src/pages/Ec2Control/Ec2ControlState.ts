@@ -1,3 +1,4 @@
+import { Ec2Status } from "../../lib";
 import { RsOption, None, Some } from "../../shared";
 
 interface ConstructorParams {
@@ -7,6 +8,7 @@ interface ConstructorParams {
   buttonColor?: string;
   buttonDisabled?: boolean;
   statusText?: string;
+  ec2Status?: Ec2Status;
 }
 
 interface ClassFields extends Required<ConstructorParams> {}
@@ -21,6 +23,7 @@ export class Ec2ControlState {
       buttonColor: "success",
       buttonDisabled: false,
       statusText: "Stopped",
+      ec2Status: Ec2Status.Off,
       ...n,
     };
     Object.assign(this, withDefaults);
@@ -30,6 +33,7 @@ export class Ec2ControlState {
     this.isLoading = true;
     this.buttonDisabled = true;
     this.buttonText = "Loading...";
+    this.ec2Status = Ec2Status.Pending;
     return this.copy();
   }
 
@@ -40,6 +44,7 @@ export class Ec2ControlState {
   running(publicIP: string): Ec2ControlState {
     this.publicIP = Some(`Public IP: ${publicIP}`);
     this.statusText = "Running";
+    this.ec2Status = Ec2Status.On;
     this.isLoading = false;
     this.buttonDisabled = false;
     this.buttonText = "Stop Instance";
@@ -52,6 +57,7 @@ export class Ec2ControlState {
       isLoading: this.isLoading,
       publicIP: this.publicIP,
       buttonText: this.buttonText,
+      ec2Status: this.ec2Status,
       buttonDisabled: this.buttonDisabled,
       buttonColor: this.buttonColor,
       statusText: this.statusText,
