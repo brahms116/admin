@@ -1,4 +1,5 @@
 import { Box, Button, LinearProgress, TextField } from "@mui/material";
+import { useEffect } from "react";
 import { useLogin } from "./useLogin";
 
 export const Login: React.FC = () => {
@@ -8,6 +9,10 @@ export const Login: React.FC = () => {
     const text = e.target.value;
     controller.handlePwdChange(text);
   }
+
+  useEffect(() => {
+    controller.checkToken();
+  }, []);
 
   function onButtonClick() {
     controller.signIn();

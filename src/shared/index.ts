@@ -3,3 +3,4 @@
  */
 export * from "./RsOption";
 export * from "./RsResult";
+export * from "./Sleep";

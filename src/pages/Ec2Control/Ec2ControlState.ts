@@ -40,6 +40,7 @@ export class Ec2ControlState {
   running(publicIP: string): Ec2ControlState {
     this.publicIP = Some(`Public IP: ${publicIP}`);
     this.statusText = "Running";
+    this.isLoading = false;
     this.buttonDisabled = false;
     this.buttonText = "Stop Instance";
     this.buttonColor = "warning";

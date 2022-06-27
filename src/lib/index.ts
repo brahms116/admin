@@ -3,3 +3,4 @@ export * from "./FetchUtils";
 export * from "./FormControl";
 export * from "./AdminErr";
 export * from "./Logger";
+export * from "./Ec2";

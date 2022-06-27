@@ -6,7 +6,7 @@ import {
   LogError,
 } from "../../lib";
 
-export interface ChangeAuthStatus {
+export interface LoginManageAuthStatus {
   pending(): void;
   none(): void;
   authenticated(token: string): void;
@@ -18,7 +18,7 @@ export interface RouteLoginPage {
 
 export async function signIn(
   authSvr: Auth,
-  authState: ChangeAuthStatus,
+  authState: LoginManageAuthStatus,
   tokenSvr: PersistToken,
   router: RouteLoginPage,
   logger: LogError,
@@ -52,7 +52,7 @@ export async function signIn(
 
 export async function checkToken(
   authSvr: Auth,
-  authState: ChangeAuthStatus,
+  authState: LoginManageAuthStatus,
   tokenSvr: PersistToken,
   router: RouteLoginPage,
   logger: LogError

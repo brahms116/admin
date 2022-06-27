@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../App";
 import {
@@ -12,7 +12,7 @@ import {
   checkToken,
   RouteLoginPage,
   signIn,
-  ChangeAuthStatus,
+  LoginManageAuthStatus,
   updatePwdField,
 } from "./funcs";
 
@@ -51,7 +51,7 @@ export function useLogin() {
   const auth = useAuth((state) => state.c);
   const update = useAuth((state) => state.update);
 
-  const authControl: ChangeAuthStatus = {
+  const authControl: LoginManageAuthStatus = {
     authenticated: (token: string) => {
       update(auth.setCreds(token));
     },
