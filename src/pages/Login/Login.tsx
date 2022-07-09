@@ -29,6 +29,8 @@ export const Login: React.FC = () => {
       }}
     >
       <Box sx={{ width: 300, display: "flex", flexDirection: "column" }}>
+        <h1 className="text-4xl">Admin Panel</h1>
+        <div className="h-8" />
         <TextField
           value={controller.pwdControl.getField()}
           onChange={handleInputChange}
